@@ -1,0 +1,6 @@
+This favicon was generated using the following font:
+
+- Font Title: League Script
+- Font Author: undefined
+- Font Source: https://fonts.gstatic.com/s/leaguescript/v30/CSR54zpSlumSWj9CGVsoBZdeaNNUuOwkC2s.ttf
+- Font License: undefined)
