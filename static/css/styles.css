@@ -1,0 +1,438 @@
+/* =========================================================
+   Farook Ajose — Portfolio
+   Blueprint instrumentation theme
+   ========================================================= */
+
+:root {
+    --color-bg: #0b1220;
+    --color-surface: #121b2e;
+    --color-surface-raised: #16213a;
+    --color-border: #2a3548;
+    --color-border-strong: #3a4863;
+    --color-teal: #3a8f8c;
+    --color-teal-light: #5fb3af;
+    --color-amber: #d98f33;
+    --color-amber-light: #e8a94f;
+    --color-text: #e7edf3;
+    --color-text-secondary: #8b9bb0;
+    --color-text-muted: #5f6f85;
+
+    --font-display: "Space Grotesk", sans-serif;
+    --font-body: "Inter", sans-serif;
+    --font-mono: "IBM Plex Mono", monospace;
+}
+
+/* =========================================================
+   Base
+   ========================================================= */
+
+html,
+body {
+    height: 100%;
+}
+
+body {
+    background-color: var(--color-bg);
+    color: var(--color-text);
+    font-family: var(--font-body);
+    font-size: 16px;
+    line-height: 1.65;
+}
+
+h1,
+h2,
+h3,
+h4,
+h5,
+h6 {
+    font-family: var(--font-display);
+    font-weight: 500;
+    color: var(--color-text);
+}
+
+p {
+    color: var(--color-text-secondary);
+}
+
+a {
+    color: var(--color-teal-light);
+    text-decoration: none;
+}
+
+a:hover {
+    color: var(--color-amber-light);
+}
+
+::selection {
+    background: var(--color-teal);
+    color: var(--color-bg);
+}
+
+/* =========================================================
+   Buttons — teal for standard actions, amber reserved
+   for the one primary action per page (resume, submit)
+   ========================================================= */
+
+.btn {
+    font-family: var(--font-mono);
+    font-size: 0.75rem;
+    letter-spacing: 0.04em;
+    border-radius: 4px;
+    padding: 0.55rem 1.25rem;
+}
+
+.btn-primary {
+    background-color: var(--color-amber);
+    border-color: var(--color-amber);
+    color: var(--color-bg);
+}
+
+.btn-primary:hover,
+.btn-primary:focus {
+    background-color: var(--color-amber-light);
+    border-color: var(--color-amber-light);
+    color: var(--color-bg);
+}
+
+.btn-secondary {
+    background-color: transparent;
+    border-color: var(--color-border-strong);
+    color: var(--color-text-secondary);
+}
+
+.btn-secondary:hover,
+.btn-secondary:focus {
+    background-color: var(--color-surface-raised);
+    border-color: var(--color-teal);
+    color: var(--color-teal-light);
+}
+
+/* =========================================================
+   Navbar
+   ========================================================= */
+
+#mainNav {
+    background-color: var(--color-bg);
+    border-bottom: 0.5px solid var(--color-border);
+}
+
+#mainNav .navbar-brand {
+    font-family: var(--font-display);
+    font-weight: 500;
+    font-size: 1.05rem;
+    color: var(--color-text);
+}
+
+#mainNav .navbar-brand:hover {
+    color: var(--color-teal-light);
+}
+
+#mainNav .nav-link {
+    font-family: var(--font-mono);
+    font-size: 0.8rem;
+    letter-spacing: 0.03em;
+    color: var(--color-text-secondary);
+    transition: color 0.15s ease;
+}
+
+#mainNav .nav-link:hover {
+    color: var(--color-teal-light);
+}
+
+#mainNav .nav-link.active {
+    color: var(--color-amber-light);
+}
+
+#mainNav .navbar-toggler {
+    color: var(--color-text-secondary);
+    border-color: var(--color-border-strong);
+    font-family: var(--font-mono);
+    font-size: 0.75rem;
+}
+
+/* =========================================================
+   Masthead (page header)
+   ========================================================= */
+
+.masthead {
+    position: relative;
+    background-size: cover;
+    background-position: center;
+    padding: 6rem 0 4rem;
+}
+
+.masthead::before {
+    content: "";
+    position: absolute;
+    inset: 0;
+    background-color: rgba(11, 18, 32, 0.82);
+}
+
+.masthead .container {
+    z-index: 1;
+}
+
+.masthead .site-heading h1 {
+    font-size: 2.25rem;
+    margin-bottom: 0.5rem;
+}
+
+.masthead .subheading {
+    display: block;
+    font-family: var(--font-mono);
+    font-size: 0.85rem;
+    letter-spacing: 0.03em;
+    text-transform: uppercase;
+    color: var(--color-teal-light);
+    margin-bottom: 1.25rem;
+}
+
+.masthead .intro p {
+    max-width: 34rem;
+    color: var(--color-text-secondary);
+}
+
+/* =========================================================
+   Section headings
+   ========================================================= */
+
+.section-heading {
+    font-size: 1.1rem;
+    text-transform: uppercase;
+    letter-spacing: 0.03em;
+    color: var(--color-text-muted);
+    font-family: var(--font-mono);
+    font-weight: 400;
+}
+
+/* =========================================================
+   Project cards + filters (Home + Projects pages)
+   ========================================================= */
+
+.project-card {
+    background-color: var(--color-surface);
+    border: 0.5px solid var(--color-border);
+    border-radius: 12px;
+    transition: border-color 0.15s ease, transform 0.15s ease;
+}
+
+.project-card:hover {
+    border-color: var(--color-teal);
+    transform: translateY(-2px);
+}
+
+.project-card .card-title {
+    font-size: 1rem;
+    color: var(--color-text);
+}
+
+.project-tag {
+    font-family: var(--font-mono);
+    letter-spacing: 0.04em;
+    color: var(--color-teal-light);
+}
+
+.project-stack {
+    font-family: var(--font-mono);
+    font-size: 0.75rem;
+    color: var(--color-text-muted);
+}
+
+.project-filters {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.5rem;
+}
+
+.project-chip {
+    font-family: var(--font-mono);
+    font-size: 0.72rem;
+    letter-spacing: 0.03em;
+    background: transparent;
+    border: 0.5px solid var(--color-border-strong);
+    color: var(--color-text-secondary);
+    border-radius: 999px;
+    padding: 0.35rem 0.85rem;
+    transition: all 0.15s ease;
+}
+
+.project-chip:hover {
+    border-color: var(--color-teal);
+    color: var(--color-teal-light);
+}
+
+.project-chip.active {
+    background-color: rgba(58, 143, 140, 0.15);
+    border-color: var(--color-teal);
+    color: var(--color-teal-light);
+}
+
+.project-sort {
+    background-color: var(--color-surface);
+    border: 0.5px solid var(--color-border-strong);
+    color: var(--color-text-secondary);
+    font-family: var(--font-mono);
+    font-size: 0.8rem;
+}
+
+/* =========================================================
+   About page
+   ========================================================= */
+
+.about-bio p {
+    max-width: 38rem;
+}
+
+.about-link {
+    font-family: var(--font-mono);
+    font-size: 0.8rem;
+    color: var(--color-text-secondary);
+    border-bottom: 0.5px solid transparent;
+}
+
+.about-link:hover {
+    color: var(--color-teal-light);
+    border-bottom-color: var(--color-teal);
+}
+
+.about-stat {
+    background-color: var(--color-surface);
+    border-radius: 8px;
+    padding: 1rem;
+}
+
+.about-stat-value {
+    font-family: var(--font-mono);
+    font-size: 1.5rem;
+    font-weight: 500;
+    color: var(--color-amber-light);
+}
+
+.about-stat-label {
+    font-size: 0.78rem;
+    color: var(--color-text-secondary);
+    margin-top: 0.25rem;
+}
+
+/* =========================================================
+   Footer
+   ========================================================= */
+
+footer {
+    border-top: 0.5px solid var(--color-border) !important;
+    padding: 2.5rem 0;
+    margin-top: 3rem;
+}
+
+footer .fa-stack .fa-circle {
+    color: var(--color-surface);
+}
+
+footer .fa-stack .fa-inverse {
+    color: var(--color-text-secondary);
+}
+
+footer a:hover .fa-stack .fa-circle {
+    color: var(--color-teal);
+}
+
+footer a:hover .fa-stack .fa-inverse {
+    color: var(--color-bg);
+}
+
+footer .text-muted {
+    color: var(--color-text-muted) !important;
+    font-family: var(--font-mono);
+    font-size: 0.75rem;
+}
+
+/* =========================================================
+   Admin pages (login + add-project)
+   ========================================================= */
+
+.admin-body {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    min-height: 100vh;
+    padding: 2rem 1rem;
+}
+
+.admin-wrapper {
+    width: 100%;
+    max-width: 24rem;
+}
+
+.admin-wrapper-wide {
+    max-width: 36rem;
+}
+
+.admin-card {
+    background-color: var(--color-surface);
+    border: 0.5px solid var(--color-border);
+    border-radius: 12px;
+    padding: 2rem;
+}
+
+.admin-card-icon {
+    text-align: center;
+    color: var(--color-text-muted);
+    font-size: 1.25rem;
+    margin-bottom: 0.75rem;
+}
+
+.admin-title {
+    font-size: 1.1rem;
+    text-align: left;
+    margin-bottom: 1.25rem;
+}
+
+#adminLogin .admin-title {
+    text-align: center;
+}
+
+.admin-label {
+    display: block;
+    font-family: var(--font-mono);
+    font-size: 0.72rem;
+    letter-spacing: 0.03em;
+    color: var(--color-text-secondary);
+    margin-bottom: 0.35rem;
+}
+
+.admin-input {
+    background-color: var(--color-bg);
+    border: 0.5px solid var(--color-border-strong);
+    color: var(--color-text);
+}
+
+.admin-input:focus {
+    background-color: var(--color-bg);
+    border-color: var(--color-teal);
+    color: var(--color-text);
+    box-shadow: 0 0 0 1px var(--color-teal);
+}
+
+.admin-input::placeholder {
+    color: var(--color-text-muted);
+}
+
+.admin-error {
+    background-color: rgba(216, 90, 48, 0.12);
+    border: 0.5px solid #d85a30;
+    color: #f0997b;
+    font-size: 0.85rem;
+    padding: 0.6rem 0.9rem;
+    border-radius: 6px;
+    margin-bottom: 1rem;
+}
+
+.admin-success {
+    background-color: rgba(58, 143, 140, 0.12);
+    border: 0.5px solid var(--color-teal);
+    color: var(--color-teal-light);
+    font-size: 0.85rem;
+    padding: 0.6rem 0.9rem;
+    border-radius: 6px;
+    margin-bottom: 1rem;
+}
