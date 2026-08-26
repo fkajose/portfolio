@@ -8,40 +8,75 @@
   <div class="container position-relative px-4 px-lg-5">
     <div class="row gx-4 gx-lg-5 justify-content-center">
       <div class="col-md-10 col-lg-8 col-xl-7">
-        <div class="page-heading">
-          <h1>About Me</h1>
-          <span class="subheading">This is what I do.</span>
+        <div class="site-heading">
+          <h1>About</h1>
+          <span class="subheading">background, work, and how to reach me</span>
         </div>
       </div>
     </div>
   </div>
 </header>
+
 <!-- Main Content-->
-<main class="mb-4">
-  <div class="container px-4 px-lg-5">
-    <div class="row gx-4 gx-lg-5 justify-content-center">
-      <div class="col-md-10 col-lg-8 col-xl-7">
+<div class="container px-4 px-lg-5">
+  <div class="row gx-4 gx-lg-5 justify-content-center">
+    <div class="col-md-10 col-lg-8 col-xl-7">
+
+      <div class="about-bio mb-5">
         <p>
-          Lorem ipsum dolor sit amet, consectetur adipisicing elit. Saepe
-          nostrum ullam eveniet pariatur voluptates odit, fuga atque ea nobis
-          sit soluta odio, adipisci quas excepturi maxime quae totam ducimus
-          consectetur?
+          I'm a First Class chemical engineering graduate from the University of Lagos
+          (CGPA 4.63/5.00, 2024), and I build systems that sit at the intersection of
+          process engineering, data, and automation.
         </p>
         <p>
-          Lorem ipsum dolor sit amet, consectetur adipisicing elit. Eius
-          praesentium recusandae illo eaque architecto error, repellendus iusto
-          reprehenderit, doloribus, minus sunt. Numquam at quae voluptatum in
-          officia voluptas voluptatibus, minus!
+          I completed my NYSC service year as a Consulting Analyst at EnvironQuest
+          Nigeria Limited, working on Environmental and Social Due Diligence (ESDD)
+          across 20+ client engagements under IFC Performance Standards and AfDB
+          frameworks. Alongside that, I'm pursuing a Master of Science in Financial
+          Engineering (MScFE) at WorldQuant University, part-time.
         </p>
         <p>
-          Lorem ipsum dolor sit amet, consectetur adipisicing elit. Aut
-          consequuntur magnam, excepturi aliquid ex itaque esse est vero natus
-          quae optio aperiam soluta voluptatibus corporis atque iste neque sit
-          tempora!
+          I've also led student and young-professional initiatives, including
+          establishing the NSChE Youth Section, and I write regularly — I'm a Quora
+          Top Writer with published work on engineering, systems, and career topics.
         </p>
       </div>
+
+      <div class="d-flex flex-wrap align-items-center gap-3 mb-5">
+        
+          class="btn btn-primary text-uppercase"
+          href="{{ url_for('static', filename='assets/resume/farook-ajose-resume.pdf') }}"
+          download
+          >Download resume</a
+        >
+        <a class="about-link" href="https://quora.com/profile/Farook-Ajose" target="_blank" rel="noopener">Quora</a>
+        <a class="about-link" href="https://linkedin.com/in/farook-ajose" target="_blank" rel="noopener">LinkedIn</a>
+        <a class="about-link" href="https://medium.com/@f_ajose" target="_blank" rel="noopener">Medium</a>
+      </div>
+
+      <div class="row gx-4 gx-lg-5">
+        <div class="col-md-4 mb-4">
+          <div class="about-stat">
+            <div class="about-stat-value">4.63/5.00</div>
+            <div class="about-stat-label">CGPA, chemical engineering</div>
+          </div>
+        </div>
+        <div class="col-md-4 mb-4">
+          <div class="about-stat">
+            <div class="about-stat-value">20+</div>
+            <div class="about-stat-label">ESDD engagements</div>
+          </div>
+        </div>
+        <div class="col-md-4 mb-4">
+          <div class="about-stat">
+            <div class="about-stat-value">40+</div>
+            <div class="about-stat-label">institutions, NSChE rollout</div>
+          </div>
+        </div>
+      </div>
+
     </div>
   </div>
-</main>
+</div>
 
 {% include "footer.html" %}

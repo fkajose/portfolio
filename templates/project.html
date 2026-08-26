@@ -1,0 +1,160 @@
+{% include "header.html" %}
+
+<!-- Page Header-->
+<header
+  class="masthead"
+  style="
+    background-image: url(&quot;../static/assets/img/projects-bg.jpg&quot;);
+  "
+>
+  <div class="container position-relative px-4 px-lg-5">
+    <div class="row gx-4 gx-lg-5 justify-content-center">
+      <div class="col-md-10 col-lg-8 col-xl-7">
+        <div class="site-heading">
+          <h1>Projects</h1>
+          <span class="subheading">automation, AI, and engineering work</span>
+        </div>
+      </div>
+    </div>
+  </div>
+</header>
+
+<!-- Main Content-->
+<div class="container px-4 px-lg-5">
+  <div class="row gx-4 gx-lg-5 justify-content-center">
+    <div class="col-md-10 col-lg-8 col-xl-7">
+      <!-- Filter + sort controls -->
+      <div
+        class="d-flex flex-wrap justify-content-between align-items-center mb-4 gap-3"
+      >
+        <div class="project-filters" id="projectFilters">
+          <button class="project-chip active" data-tag="all" type="button">
+            All
+          </button>
+          <button class="project-chip" data-tag="ai" type="button">
+            AI / NLP
+          </button>
+          <button class="project-chip" data-tag="automation" type="button">
+            Automation
+          </button>
+          <button class="project-chip" data-tag="data" type="button">
+            Data analysis
+          </button>
+          <button class="project-chip" data-tag="cheme" type="button">
+            Chemical eng
+          </button>
+          <button class="project-chip" data-tag="webdev" type="button">
+            Software / web dev
+          </button>
+        </div>
+        <select
+          class="form-select project-sort"
+          id="projectSort"
+          style="width: auto"
+        >
+          <option value="date">Sort: most recent</option>
+          <option value="impact">Sort: impact</option>
+          <option value="az">Sort: A → Z</option>
+        </select>
+      </div>
+
+      <!-- Project grid -->
+      <div class="row gx-4 gx-lg-5" id="projectGrid">
+        {% for project in projects %}
+        <div
+          class="col-md-6 mb-4 project-item"
+          data-tag="{{ project.tag }}"
+          data-date="{{ project.date }}"
+          data-impact="{{ project.impact_score }}"
+          data-title="{{ project.title }}"
+        >
+          <a
+            href="{{ url_for('project_detail', slug=project.slug) }}"
+            class="text-decoration-none"
+          >
+            <div class="card h-100 project-card">
+              <div class="card-body">
+                <div class="project-tag text-uppercase small mb-2">
+                  {{ project.tag_label }}
+                </div>
+                <h5 class="card-title">{{ project.title }}</h5>
+                <p class="card-text small text-muted mb-3">
+                  {{ project.summary }}
+                </p>
+                <div class="project-stack small text-muted">
+                  {{ project.stack | join(' · ') }}
+                </div>
+              </div>
+            </div>
+          </a>
+        </div>
+        {% endfor %}
+      </div>
+
+      <div id="projectEmptyState" class="text-center text-muted py-5 d-none">
+        No projects match this filter yet.
+      </div>
+    </div>
+  </div>
+</div>
+
+{% include "footer.html" %}
+
+<script>
+  document.addEventListener("DOMContentLoaded", function () {
+    var filterButtons = document.querySelectorAll(".project-chip");
+    var sortSelect = document.getElementById("projectSort");
+    var grid = document.getElementById("projectGrid");
+    var emptyState = document.getElementById("projectEmptyState");
+    var items = Array.prototype.slice.call(
+      document.querySelectorAll(".project-item"),
+    );
+
+    var activeTag = "all";
+    var sortBy = "date";
+
+    function render() {
+      var visible = items.filter(function (item) {
+        return activeTag === "all" || item.dataset.tag === activeTag;
+      });
+
+      visible.sort(function (a, b) {
+        if (sortBy === "date") {
+          return b.dataset.date.localeCompare(a.dataset.date);
+        }
+        if (sortBy === "impact") {
+          return Number(b.dataset.impact) - Number(a.dataset.impact);
+        }
+        return a.dataset.title.localeCompare(b.dataset.title);
+      });
+
+      items.forEach(function (item) {
+        item.classList.add("d-none");
+      });
+      visible.forEach(function (item) {
+        item.classList.remove("d-none");
+        grid.appendChild(item);
+      });
+
+      emptyState.classList.toggle("d-none", visible.length > 0);
+    }
+
+    filterButtons.forEach(function (btn) {
+      btn.addEventListener("click", function () {
+        filterButtons.forEach(function (b) {
+          b.classList.remove("active");
+        });
+        btn.classList.add("active");
+        activeTag = btn.dataset.tag;
+        render();
+      });
+    });
+
+    sortSelect.addEventListener("change", function () {
+      sortBy = sortSelect.value;
+      render();
+    });
+
+    render();
+  });
+</script>

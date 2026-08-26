@@ -9,8 +9,17 @@
     <div class="row gx-4 gx-lg-5 justify-content-center">
       <div class="col-md-10 col-lg-8 col-xl-7">
         <div class="site-heading">
-          <h1>Angela's Blog</h1>
-          <span class="subheading">A collection of random musings.</span>
+          <h1>Farook Ajose</h1>
+          <span class="subheading"
+            >chemical engineer building automation and AI systems</span
+          >
+        </div>
+        <div class="intro">
+          <p>
+            First-class graduate of chemical engineering from the University of
+            Lagos with experience using data to influence decisions and support
+            operations.
+          </p>
         </div>
       </div>
     </div>
@@ -20,42 +29,35 @@
 <div class="container px-4 px-lg-5">
   <div class="row gx-4 gx-lg-5 justify-content-center">
     <div class="col-md-10 col-lg-8 col-xl-7">
-      <!-- Post preview-->
-      {% for post in all_posts %}
-      <div class="post-preview">
-        <a href="{{ url_for('show_post', post_id=post.id) }}">
-          <h2 class="post-title">{{ post.title }}</h2>
-          <h3 class="post-subtitle">{{ post.subtitle }}</h3>
-        </a>
-        <p class="post-meta">
-          Posted by
-          <a href="#">{{post.author.name}}</a>
-          on {{post.date}}
-          <!-- TODO: Only show delete button if user id is 1 (admin user) -->
-          {% if current_user.is_authenticated and current_user.id == 1 %}
-          <a href="{{url_for('delete_post', post_id=post.id) }}">✘</a>
-          {% endif %}
-        </p>
-      </div>
-      <!-- Divider-->
-      <hr class="my-4" />
-      {% endfor %}
+      <h2 class="section-heading mb-4">Featured work</h2>
 
-      <!-- New Post -->
-      <!-- TODO: Only show Create Post button if user id is 1 (admin user) -->
-      {% if current_user.is_authenticated and current_user.id == 1 %}
-      <div class="d-flex justify-content-end mb-4">
+      <div class="row gx-4 gx-lg-5 mb-4">
+        {% for project in featured_projects %}
+        <div class="col-md-4 mb-4">
+          <a
+            href="{{ url_for('project_detail', slug=project.slug) }}"
+            class="text-decoration-none"
+          >
+            <div class="card h-100 project-card">
+              <div class="card-body">
+                <div class="project-tag text-uppercase small mb-2">
+                  {{ project.tag_label }}
+                </div>
+                <h5 class="card-title">{{ project.title }}</h5>
+                <p class="card-text small text-muted">{{ project.summary }}</p>
+              </div>
+            </div>
+          </a>
+        </div>
+        {% endfor %}
+      </div>
+
+      <div class="d-flex justify-content-end mb-5">
         <a
-          class="btn btn-primary float-right"
-          href="{{url_for('add_new_post')}}"
-          >Create New Post</a
+          class="btn btn-secondary text-uppercase"
+          href="{{ url_for('projects') }}"
+          >View all projects →</a
         >
-      </div>
-      {% endif %}
-
-      <!-- Pager-->
-      <div class="d-flex justify-content-end mb-4">
-        <a class="btn btn-secondary text-uppercase" href="#!">Older Posts →</a>
       </div>
     </div>
   </div>

@@ -1,0 +1,287 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta
+      name="viewport"
+      content="width=device-width, initial-scale=1, shrink-to-fit=no"
+    />
+    <meta name="robots" content="noindex, nofollow" />
+    <title>Add project — Farook Ajose</title>
+    {% block styles %} {{ bootstrap.load_css() }}
+    <link
+      href="https://fonts.googleapis.com/css?family=Space+Grotesk:400,700,400italic,700italic"
+      rel="stylesheet"
+      type="text/css"
+    />
+    <link
+      href="https://fonts.googleapis.com/css?family=Inter:300italic,400italic,600italic,700italic,800italic,400,300,600,700,800"
+      rel="stylesheet"
+      type="text/css"
+    />
+    <link
+      href="https://fonts.googleapis.com/css?family=IBM+Plex+Mono:300italic,400italic,600italic,700italic,800italic,400,300,600,700,800"
+      rel="stylesheet"
+      type="text/css"
+    />
+    <link
+      href="{{ url_for('static', filename='css/styles.css') }}"
+      rel="stylesheet"
+    />
+    {% endblock %}
+  </head>
+  <body class="admin-body">
+    <div class="admin-wrapper admin-wrapper-wide">
+      <div id="checkingSession" class="admin-card text-center">
+        <p class="text-muted small mb-0">Checking session…</p>
+      </div>
+
+      <div id="addProjectPanel" class="admin-card d-none">
+        <div class="d-flex justify-content-between align-items-center mb-4">
+          <h1 class="admin-title mb-0">New project</h1>
+          <div>
+            <a
+              href="{{ url_for('admin_login') }}"
+              class="btn btn-sm btn-secondary me-2"
+              >Back</a
+            >
+            <button id="logoutButton" class="btn btn-sm btn-secondary">
+              Sign out
+            </button>
+          </div>
+        </div>
+
+        <div id="formError" class="admin-error d-none"></div>
+        <div id="formSuccess" class="admin-success d-none"></div>
+
+        <form id="projectForm">
+          <div class="mb-3">
+            <label class="admin-label" for="title">Title</label>
+            <input
+              type="text"
+              id="title"
+              class="form-control admin-input"
+              placeholder="Regulatory intelligence pipeline"
+              required
+            />
+          </div>
+
+          <div class="row">
+            <div class="col-md-6 mb-3">
+              <label class="admin-label" for="tag">Category</label>
+              <select id="tag" class="form-select admin-input" required>
+                <option value="" disabled selected>Choose one</option>
+                <option value="ai">AI / NLP</option>
+                <option value="automation">Automation</option>
+                <option value="data">Data analysis</option>
+                <option value="cheme">Chemical eng</option>
+                <option value="webdev">Software / web dev</option>
+              </select>
+            </div>
+            <div class="col-md-6 mb-3">
+              <label class="admin-label" for="date">Date</label>
+              <input
+                type="date"
+                id="date"
+                class="form-control admin-input"
+                required
+              />
+            </div>
+          </div>
+
+          <div class="mb-3">
+            <label class="admin-label" for="summary">Summary</label>
+            <textarea
+              id="summary"
+              class="form-control admin-input"
+              rows="3"
+              placeholder="One or two sentences on the problem and result"
+              required
+            ></textarea>
+          </div>
+
+          <div class="row">
+            <div class="col-md-6 mb-3">
+              <label class="admin-label" for="impactScore"
+                >Impact score (number, for sorting)</label
+              >
+              <input
+                type="number"
+                id="impactScore"
+                class="form-control admin-input"
+                placeholder="99"
+              />
+            </div>
+            <div class="col-md-6 mb-3">
+              <label class="admin-label" for="impactLabel">Impact label</label>
+              <input
+                type="text"
+                id="impactLabel"
+                class="form-control admin-input"
+                placeholder="~99% time reduction"
+              />
+            </div>
+          </div>
+
+          <div class="mb-3">
+            <label class="admin-label" for="stack"
+              >Stack (comma-separated)</label
+            >
+            <input
+              type="text"
+              id="stack"
+              class="form-control admin-input"
+              placeholder="Python, Gemini, AWS S3"
+            />
+          </div>
+
+          <div class="mb-3">
+            <label class="admin-label" for="link">Repo / demo link</label>
+            <input
+              type="url"
+              id="link"
+              class="form-control admin-input"
+              placeholder="https://github.com/..."
+            />
+          </div>
+
+          <div class="form-check mb-4">
+            <input type="checkbox" class="form-check-input" id="featured" />
+            <label class="form-check-label small text-muted" for="featured">
+              Feature on homepage
+            </label>
+          </div>
+
+          <button
+            type="submit"
+            class="btn btn-primary text-uppercase"
+            id="submitButton"
+          >
+            Add project
+          </button>
+        </form>
+      </div>
+    </div>
+
+    <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+    <script>
+      const supabaseClient = supabase.createClient(
+        "{{ config.SUPABASE_URL }}",
+        "{{ config.SUPABASE_ANON_KEY }}",
+      );
+
+      const checkingSession = document.getElementById("checkingSession");
+      const addProjectPanel = document.getElementById("addProjectPanel");
+      const projectForm = document.getElementById("projectForm");
+      const formError = document.getElementById("formError");
+      const formSuccess = document.getElementById("formSuccess");
+      const submitButton = document.getElementById("submitButton");
+      const logoutButton = document.getElementById("logoutButton");
+
+      const tagLabels = {
+        ai: "AI / NLP",
+        automation: "Automation",
+        data: "Data analysis",
+        cheme: "Chemical eng",
+        webdev: "Software / web dev",
+      };
+
+      function slugify(text) {
+        return text
+          .toLowerCase()
+          .trim()
+          .replace(/[^a-z0-9]+/g, "-")
+          .replace(/(^-|-$)/g, "");
+      }
+
+      function showError(message) {
+        formSuccess.classList.add("d-none");
+        formError.textContent = message;
+        formError.classList.remove("d-none");
+      }
+
+      function showSuccess(message) {
+        formError.classList.add("d-none");
+        formSuccess.textContent = message;
+        formSuccess.classList.remove("d-none");
+      }
+
+      async function requireSession() {
+        const { data } = await supabaseClient.auth.getSession();
+        if (!data.session) {
+          window.location.href = "{{ url_for('admin_login') }}";
+          return;
+        }
+        checkingSession.classList.add("d-none");
+        addProjectPanel.classList.remove("d-none");
+      }
+
+      projectForm.addEventListener("submit", async function (e) {
+        e.preventDefault();
+        formError.classList.add("d-none");
+        formSuccess.classList.add("d-none");
+
+        const title = document.getElementById("title").value.trim();
+        const tag = document.getElementById("tag").value;
+        const date = document.getElementById("date").value;
+        const summary = document.getElementById("summary").value.trim();
+        const impactScoreRaw = document.getElementById("impactScore").value;
+        const impactLabel = document.getElementById("impactLabel").value.trim();
+        const stackRaw = document.getElementById("stack").value;
+        const link = document.getElementById("link").value.trim();
+        const featured = document.getElementById("featured").checked;
+
+        if (!title || !tag || !date || !summary) {
+          showError("Fill in title, category, date, and summary.");
+          return;
+        }
+
+        const stack = stackRaw
+          .split(",")
+          .map(function (s) {
+            return s.trim();
+          })
+          .filter(function (s) {
+            return s.length > 0;
+          });
+
+        const payload = {
+          title: title,
+          slug: slugify(title),
+          tag: tag,
+          tag_label: tagLabels[tag],
+          date: date,
+          summary: summary,
+          impact_score: impactScoreRaw ? Number(impactScoreRaw) : null,
+          impact_label: impactLabel || null,
+          stack: stack,
+          link: link || null,
+          featured: featured,
+        };
+
+        submitButton.disabled = true;
+        submitButton.textContent = "Adding…";
+
+        const { error } = await supabaseClient.from("projects").insert(payload);
+
+        submitButton.disabled = false;
+        submitButton.textContent = "Add project";
+
+        if (error) {
+          showError("Couldn't save the project. " + error.message);
+          return;
+        }
+
+        showSuccess("Project added.");
+        projectForm.reset();
+      });
+
+      logoutButton.addEventListener("click", async function () {
+        await supabaseClient.auth.signOut();
+        window.location.href = "{{ url_for('admin_login') }}";
+      });
+
+      requireSession();
+    </script>
+  </body>
+</html>

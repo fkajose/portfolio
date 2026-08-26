@@ -1,0 +1,161 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta
+      name="viewport"
+      content="width=device-width, initial-scale=1, shrink-to-fit=no"
+    />
+    <meta name="robots" content="noindex, nofollow" />
+    <title>Admin — Farook Ajose</title>
+    {% block styles %} {{ bootstrap.load_css() }}
+    <link
+      href="https://fonts.googleapis.com/css?family=Space+Grotesk:400,700,400italic,700italic"
+      rel="stylesheet"
+      type="text/css"
+    />
+    <link
+      href="https://fonts.googleapis.com/css?family=Inter:300italic,400italic,600italic,700italic,800italic,400,300,600,700,800"
+      rel="stylesheet"
+      type="text/css"
+    />
+    <link
+      href="https://fonts.googleapis.com/css?family=IBM+Plex+Mono:300italic,400italic,600italic,700italic,800italic,400,300,600,700,800"
+      rel="stylesheet"
+      type="text/css"
+    />
+    <link
+      href="{{ url_for('static', filename='css/styles.css') }}"
+      rel="stylesheet"
+    />
+    {% endblock %}
+  </head>
+  <body class="admin-body">
+    <div class="admin-wrapper">
+      <!-- Login gate -->
+      <div id="adminLogin" class="admin-card">
+        <div class="admin-card-icon">
+          <i class="fas fa-lock"></i>
+        </div>
+        <h1 class="admin-title">Admin sign in</h1>
+
+        <div id="loginError" class="admin-error d-none"></div>
+
+        <form id="loginForm">
+          <div class="mb-3">
+            <input
+              type="email"
+              id="loginEmail"
+              class="form-control admin-input"
+              placeholder="Email"
+              required
+              autocomplete="username"
+            />
+          </div>
+          <div class="mb-3">
+            <input
+              type="password"
+              id="loginPassword"
+              class="form-control admin-input"
+              placeholder="Password"
+              required
+              autocomplete="current-password"
+            />
+          </div>
+          <button
+            type="submit"
+            class="btn btn-primary w-100 text-uppercase"
+            id="loginButton"
+          >
+            Sign in
+          </button>
+        </form>
+      </div>
+
+      <!-- Signed-in state (project form goes here later) -->
+      <div id="adminPanel" class="admin-card d-none">
+        <div class="d-flex justify-content-between align-items-center mb-4">
+          <h1 class="admin-title mb-0">New project</h1>
+          <button id="logoutButton" class="btn btn-sm btn-secondary">
+            Sign out
+          </button>
+        </div>
+        <p class="text-muted small">Signed in — project form goes here.</p>
+      </div>
+    </div>
+
+    <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+    <script>
+      const supabaseClient = supabase.createClient(
+        "{{ config.SUPABASE_URL }}",
+        "{{ config.SUPABASE_ANON_KEY }}",
+      );
+
+      const loginForm = document.getElementById("loginForm");
+      const loginError = document.getElementById("loginError");
+      const loginButton = document.getElementById("loginButton");
+      const adminLogin = document.getElementById("adminLogin");
+      const adminPanel = document.getElementById("adminPanel");
+      const logoutButton = document.getElementById("logoutButton");
+
+      function showError(message) {
+        loginError.textContent = message;
+        loginError.classList.remove("d-none");
+      }
+
+      function clearError() {
+        loginError.classList.add("d-none");
+        loginError.textContent = "";
+      }
+
+      async function checkSession() {
+        const { data } = await supabaseClient.auth.getSession();
+        if (data.session) {
+          adminLogin.classList.add("d-none");
+          adminPanel.classList.remove("d-none");
+        } else {
+          adminPanel.classList.add("d-none");
+          adminLogin.classList.remove("d-none");
+        }
+      }
+
+      loginForm.addEventListener("submit", async function (e) {
+        e.preventDefault();
+        clearError();
+
+        const email = document.getElementById("loginEmail").value.trim();
+        const password = document.getElementById("loginPassword").value;
+
+        if (!email || !password) {
+          showError("Enter your email and password.");
+          return;
+        }
+
+        loginButton.disabled = true;
+        loginButton.textContent = "Signing in…";
+
+        const { error } = await supabaseClient.auth.signInWithPassword({
+          email: email,
+          password: password,
+        });
+
+        loginButton.disabled = false;
+        loginButton.textContent = "Sign in";
+
+        if (error) {
+          showError("Couldn't sign in. Check your email and password.");
+          return;
+        }
+
+        checkSession();
+      });
+
+      logoutButton.addEventListener("click", async function () {
+        await supabaseClient.auth.signOut();
+        checkSession();
+      });
+
+      checkSession();
+    </script>
+  </body>
+</html>
