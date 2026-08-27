@@ -1,0 +1,33 @@
+{% include "header.html" %}
+
+<!-- Page Header-->
+<header class="masthead masthead-compact">
+  <div class="container position-relative px-4 px-lg-5">
+    <div class="row gx-4 gx-lg-5 justify-content-center">
+      <div class="col-md-10 col-lg-8 col-xl-7 text-center">
+        <div class="site-heading">
+          <span class="subheading d-block mb-2">404</span>
+          <h1>Page not found</h1>
+        </div>
+      </div>
+    </div>
+  </div>
+</header>
+
+<!-- Main Content-->
+<div class="container px-4 px-lg-5">
+  <div class="row gx-4 gx-lg-5 justify-content-center">
+    <div class="col-md-10 col-lg-8 col-xl-7 text-center">
+      <p class="mb-4">
+        The page you're looking for doesn't exist — it may have moved, or the
+        link might be wrong.
+      </p>
+
+      <a href="{{ url_for('home') }}" class="btn btn-primary text-uppercase">
+        Back to home
+      </a>
+    </div>
+  </div>
+</div>
+
+{% include "footer.html" %}
