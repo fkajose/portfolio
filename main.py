@@ -60,7 +60,40 @@ def project_detail(slug):
     )
     if not response.data:
         abort(404)
-    return render_template("project-detail.html", project=response.data[0])
+    project = response.data[0]
+
+    # "Next" follows the same order as the Projects grid (most recent
+    # first), so the next older project is fetched — the row with the
+    # closest earlier date.
+    next_response = (
+        supabase.table("projects")
+        .select("*")
+        .lt("date", project["date"])
+        .order("date", desc=True)
+        .limit(1)
+        .execute()
+    )
+
+    if next_response.data:
+        next_project = next_response.data[0]
+    else:
+        # Reached the oldest project — wrap around to the newest one
+        # so the link never dead-ends.
+        wrap_response = (
+            supabase.table("projects")
+            .select("*")
+            .order("date", desc=True)
+            .limit(1)
+            .execute()
+        )
+        next_project = wrap_response.data[0] if wrap_response.data else None
+        # Guard against a single-project catalog linking to itself.
+        if next_project and next_project["slug"] == project["slug"]:
+            next_project = None
+
+    return render_template(
+        "project-detail.html", project=project, next_project=next_project
+    )
 
 
 @app.route("/about")
