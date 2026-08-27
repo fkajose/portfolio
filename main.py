@@ -44,7 +44,7 @@ def home():
         .limit(3)
         .execute()
     )
-    return render_template("home.html", featured_projects=response.data)
+    return render_template("index.html", featured_projects=response.data)
 
 
 @app.route("/projects")
@@ -60,7 +60,7 @@ def project_detail(slug):
     )
     if not response.data:
         abort(404)
-    return render_template("project_detail.html", project=response.data[0])
+    return render_template("project-detail.html", project=response.data[0])
 
 
 @app.route("/about")
@@ -70,7 +70,7 @@ def about():
 
 @app.route("/admin")
 def admin_login():
-    return render_template("admin_login.html")
+    return render_template("admin-login.html")
 
 
 @app.route("/admin/add-project")

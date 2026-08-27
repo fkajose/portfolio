@@ -90,15 +90,52 @@
           </div>
 
           <div class="mb-3">
-            <label class="admin-label" for="summary">Summary</label>
+            <label class="admin-label" for="summary"
+              >Summary (used on cards + grid)</label
+            >
             <textarea
               id="summary"
               class="form-control admin-input"
-              rows="3"
+              rows="2"
               placeholder="One or two sentences on the problem and result"
               required
             ></textarea>
           </div>
+
+          <hr class="admin-divider" />
+          <p class="admin-section-label">Detail page sections (optional)</p>
+
+          <div class="mb-3">
+            <label class="admin-label" for="problem">The problem</label>
+            <textarea
+              id="problem"
+              class="form-control admin-input"
+              rows="3"
+              placeholder="What was the situation before this project? Leave blank to reuse the summary."
+            ></textarea>
+          </div>
+
+          <div class="mb-3">
+            <label class="admin-label" for="approach">What I built</label>
+            <textarea
+              id="approach"
+              class="form-control admin-input"
+              rows="3"
+              placeholder="What did you actually build — tools, method, key decisions."
+            ></textarea>
+          </div>
+
+          <div class="mb-3">
+            <label class="admin-label" for="result">Result</label>
+            <textarea
+              id="result"
+              class="form-control admin-input"
+              rows="3"
+              placeholder="What changed? Quantify it if possible."
+            ></textarea>
+          </div>
+
+          <hr class="admin-divider" />
 
           <div class="row">
             <div class="col-md-6 mb-3">
@@ -224,8 +261,11 @@
 
           const title = document.getElementById("title").value.trim();
           const tag = document.getElementById("tag").value;
-          const date = document.getElementById("date").value;
+          const dateValue = document.getElementById("date").value;
           const summary = document.getElementById("summary").value.trim();
+          const problem = document.getElementById("problem").value.trim();
+          const approach = document.getElementById("approach").value.trim();
+          const result = document.getElementById("result").value.trim();
           const impactScoreRaw = document.getElementById("impactScore").value;
           const impactLabel = document
             .getElementById("impactLabel")
@@ -234,7 +274,7 @@
           const link = document.getElementById("link").value.trim();
           const featured = document.getElementById("featured").checked;
 
-          if (!title || !tag || !date || !summary) {
+          if (!title || !tag || !dateValue || !summary) {
             showError("Fill in title, category, date, and summary.");
             return;
           }
@@ -253,8 +293,11 @@
             slug: slugify(title),
             tag: tag,
             tag_label: tagLabels[tag],
-            date: date,
+            date: dateValue,
             summary: summary,
+            problem: problem || null,
+            approach: approach || null,
+            result: result || null,
             impact_score: impactScoreRaw ? Number(impactScoreRaw) : null,
             impact_label: impactLabel || null,
             stack: stack,

@@ -1,0 +1,89 @@
+{% include "header.html" %}
+
+<!-- Page Header-->
+<header
+  class="masthead masthead-compact"
+  style="
+    background-image: url(&quot;../static/assets/img/projects-bg.jpg&quot;);
+  "
+>
+  <div class="container position-relative px-4 px-lg-5">
+    <div class="row gx-4 gx-lg-5 justify-content-center">
+      <div class="col-md-10 col-lg-8 col-xl-7">
+        <a
+          href="{{ url_for('projects') }}"
+          class="project-back-link mb-3 d-inline-block"
+        >
+          ← Back to projects
+        </a>
+        <div class="site-heading">
+          <span class="subheading d-block mb-2"
+            >{{ project.tag_label }} · {{ project.date }}</span
+          >
+          <h1>{{ project.title }}</h1>
+        </div>
+        <div class="project-stack-list mt-3">
+          {% for tech in project.stack %}
+          <span class="project-stack-pill">{{ tech }}</span>
+          {% endfor %}
+        </div>
+      </div>
+    </div>
+  </div>
+</header>
+
+<!-- Main Content-->
+<div class="container px-4 px-lg-5">
+  <div class="row gx-4 gx-lg-5 justify-content-center">
+    <div class="col-md-10 col-lg-8 col-xl-7">
+      {% if project.impact_label %}
+      <div class="project-impact-banner mb-5">
+        <div class="project-impact-value">{{ project.impact_label }}</div>
+      </div>
+      {% endif %}
+
+      <div class="project-section mb-4">
+        <h2 class="section-heading mb-2">The problem</h2>
+        <p>{{ project.problem or project.summary }}</p>
+      </div>
+
+      {% if project.approach %}
+      <div class="project-section mb-4">
+        <h2 class="section-heading mb-2">What I built</h2>
+        <p>{{ project.approach }}</p>
+      </div>
+      {% endif %} {% if project.result %}
+      <div class="project-section mb-5">
+        <h2 class="section-heading mb-2">Result</h2>
+        <p>{{ project.result }}</p>
+      </div>
+      {% endif %}
+
+      <div
+        class="d-flex justify-content-between align-items-center project-detail-footer py-4"
+      >
+        {% if project.link %}
+        <a
+          href="{{ project.link }}"
+          target="_blank"
+          rel="noopener"
+          class="btn btn-secondary text-uppercase"
+        >
+          View repo
+        </a>
+        {% else %}
+        <span></span>
+        {% endif %} {% if next_project %}
+        <a
+          href="{{ url_for('project_detail', slug=next_project.slug) }}"
+          class="project-next-link"
+        >
+          Next project →
+        </a>
+        {% endif %}
+      </div>
+    </div>
+  </div>
+</div>
+
+{% include "footer.html" %}
