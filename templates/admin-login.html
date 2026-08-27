@@ -86,76 +86,78 @@
 
     <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
     <script>
-      const supabaseClient = supabase.createClient(
-        "{{ config.SUPABASE_URL }}",
-        "{{ config.SUPABASE_ANON_KEY }}",
-      );
+      (function () {
+        const supabaseClient = supabase.createClient(
+          "{{ config.SUPABASE_URL }}",
+          "{{ config.SUPABASE_ANON_KEY }}",
+        );
 
-      const loginForm = document.getElementById("loginForm");
-      const loginError = document.getElementById("loginError");
-      const loginButton = document.getElementById("loginButton");
-      const adminLogin = document.getElementById("adminLogin");
-      const adminPanel = document.getElementById("adminPanel");
-      const logoutButton = document.getElementById("logoutButton");
+        const loginForm = document.getElementById("loginForm");
+        const loginError = document.getElementById("loginError");
+        const loginButton = document.getElementById("loginButton");
+        const adminLogin = document.getElementById("adminLogin");
+        const adminPanel = document.getElementById("adminPanel");
+        const logoutButton = document.getElementById("logoutButton");
 
-      function showError(message) {
-        loginError.textContent = message;
-        loginError.classList.remove("d-none");
-      }
-
-      function clearError() {
-        loginError.classList.add("d-none");
-        loginError.textContent = "";
-      }
-
-      async function checkSession() {
-        const { data } = await supabaseClient.auth.getSession();
-        if (data.session) {
-          adminLogin.classList.add("d-none");
-          adminPanel.classList.remove("d-none");
-        } else {
-          adminPanel.classList.add("d-none");
-          adminLogin.classList.remove("d-none");
-        }
-      }
-
-      loginForm.addEventListener("submit", async function (e) {
-        e.preventDefault();
-        clearError();
-
-        const email = document.getElementById("loginEmail").value.trim();
-        const password = document.getElementById("loginPassword").value;
-
-        if (!email || !password) {
-          showError("Enter your email and password.");
-          return;
+        function showError(message) {
+          loginError.textContent = message;
+          loginError.classList.remove("d-none");
         }
 
-        loginButton.disabled = true;
-        loginButton.textContent = "Signing in…";
+        function clearError() {
+          loginError.classList.add("d-none");
+          loginError.textContent = "";
+        }
 
-        const { error } = await supabaseClient.auth.signInWithPassword({
-          email: email,
-          password: password,
+        async function checkSession() {
+          const { data } = await supabaseClient.auth.getSession();
+          if (data.session) {
+            adminLogin.classList.add("d-none");
+            adminPanel.classList.remove("d-none");
+          } else {
+            adminPanel.classList.add("d-none");
+            adminLogin.classList.remove("d-none");
+          }
+        }
+
+        loginForm.addEventListener("submit", async function (e) {
+          e.preventDefault();
+          clearError();
+
+          const email = document.getElementById("loginEmail").value.trim();
+          const password = document.getElementById("loginPassword").value;
+
+          if (!email || !password) {
+            showError("Enter your email and password.");
+            return;
+          }
+
+          loginButton.disabled = true;
+          loginButton.textContent = "Signing in…";
+
+          const { error } = await supabaseClient.auth.signInWithPassword({
+            email: email,
+            password: password,
+          });
+
+          loginButton.disabled = false;
+          loginButton.textContent = "Sign in";
+
+          if (error) {
+            showError("Couldn't sign in. Check your email and password.");
+            return;
+          }
+
+          checkSession();
         });
 
-        loginButton.disabled = false;
-        loginButton.textContent = "Sign in";
-
-        if (error) {
-          showError("Couldn't sign in. Check your email and password.");
-          return;
-        }
+        logoutButton.addEventListener("click", async function () {
+          await supabaseClient.auth.signOut();
+          checkSession();
+        });
 
         checkSession();
-      });
-
-      logoutButton.addEventListener("click", async function () {
-        await supabaseClient.auth.signOut();
-        checkSession();
-      });
-
-      checkSession();
+      })();
     </script>
   </body>
 </html>
