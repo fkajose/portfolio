@@ -78,10 +78,10 @@
                   {{ project.tag_label }}
                 </div>
                 <h5 class="card-title">{{ project.title }}</h5>
-                <p class="card-text small text-muted mb-3">
+                <p class="card-text small project-summary mb-3">
                   {{ project.summary }}
                 </p>
-                <div class="project-stack small text-muted">
+                <div class="project-stack small project-summary">
                   {{ project.stack | join(' · ') }}
                 </div>
               </div>
@@ -91,7 +91,7 @@
         {% endfor %}
       </div>
 
-      <div id="projectEmptyState" class="text-center text-muted py-5 d-none">
+      <div id="projectEmptyState" class="text-center project-summary py-5 d-none">
         No projects match this filter yet.
       </div>
     </div>

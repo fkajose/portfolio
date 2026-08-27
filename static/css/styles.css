@@ -4,22 +4,34 @@
    ========================================================= */
 
 :root {
-    --color-bg: #0b1220;
-    --color-surface: #121b2e;
-    --color-surface-raised: #16213a;
-    --color-border: #2a3548;
-    --color-border-strong: #3a4863;
-    --color-teal: #3a8f8c;
-    --color-teal-light: #5fb3af;
-    --color-amber: #d98f33;
-    --color-amber-light: #e8a94f;
-    --color-text: #e7edf3;
-    --color-text-secondary: #8b9bb0;
-    --color-text-muted: #5f6f85;
+    --color-bg: #14100d;
+    --color-surface: #251e17;
+    --color-surface-raised: #2b231c;
+    --color-border: #3d332a;
+    --color-border-strong: #75604c;
+    --color-teal: #6b8fae;
+    --color-teal-light: #93b3cc;
+    --color-amber: #d97b3f;
+    --color-amber-light: #e89b5c;
+    --color-text: #f6efe6;
+    --color-text-secondary: #c2b3a1;
+    --color-text-muted: #94856f;
 
     --font-display: "Space Grotesk", sans-serif;
     --font-body: "Inter", sans-serif;
     --font-mono: "IBM Plex Mono", monospace;
+
+    /* Override Bootstrap's own theme variables so any default-styled
+     Bootstrap element — not just our custom classes — inherits
+     correct dark-theme contrast instead of light-theme rgba values
+     that collapse to near-invisible on a dark background. */
+    --bs-body-bg: var(--color-bg);
+    --bs-body-color: var(--color-text);
+    --bs-secondary-color: var(--color-text-muted);
+    --bs-tertiary-color: var(--color-text-secondary);
+    --bs-border-color: var(--color-border);
+    --bs-link-color: var(--color-teal-light);
+    --bs-link-hover-color: var(--color-amber-light);
 }
 
 /* =========================================================
@@ -273,6 +285,10 @@ a:hover {
     color: var(--color-text-secondary);
     font-family: var(--font-mono);
     font-size: 0.8rem;
+}
+
+.project-summary {
+    color: var(--color-text-secondary);
 }
 
 /* =========================================================
