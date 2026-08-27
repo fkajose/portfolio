@@ -32,7 +32,6 @@
   </head>
   <body class="admin-body">
     <div class="admin-wrapper">
-      <!-- Login gate -->
       <div id="adminLogin" class="admin-card">
         <div class="admin-card-icon">
           <i class="fas fa-lock"></i>
@@ -71,17 +70,6 @@
           </button>
         </form>
       </div>
-
-      <!-- Signed-in state (project form goes here later) -->
-      <div id="adminPanel" class="admin-card d-none">
-        <div class="d-flex justify-content-between align-items-center mb-4">
-          <h1 class="admin-title mb-0">New project</h1>
-          <button id="logoutButton" class="btn btn-sm btn-secondary">
-            Sign out
-          </button>
-        </div>
-        <p class="text-muted small">Signed in — project form goes here.</p>
-      </div>
     </div>
 
     <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
@@ -95,9 +83,6 @@
         const loginForm = document.getElementById("loginForm");
         const loginError = document.getElementById("loginError");
         const loginButton = document.getElementById("loginButton");
-        const adminLogin = document.getElementById("adminLogin");
-        const adminPanel = document.getElementById("adminPanel");
-        const logoutButton = document.getElementById("logoutButton");
 
         function showError(message) {
           loginError.textContent = message;
@@ -109,14 +94,10 @@
           loginError.textContent = "";
         }
 
-        async function checkSession() {
+        async function redirectIfSignedIn() {
           const { data } = await supabaseClient.auth.getSession();
           if (data.session) {
-            adminLogin.classList.add("d-none");
-            adminPanel.classList.remove("d-none");
-          } else {
-            adminPanel.classList.add("d-none");
-            adminLogin.classList.remove("d-none");
+            window.location.href = "{{ url_for('add_project') }}";
           }
         }
 
@@ -148,15 +129,10 @@
             return;
           }
 
-          checkSession();
+          window.location.href = "{{ url_for('add_project') }}";
         });
 
-        logoutButton.addEventListener("click", async function () {
-          await supabaseClient.auth.signOut();
-          checkSession();
-        });
-
-        checkSession();
+        redirectIfSignedIn();
       })();
     </script>
   </body>

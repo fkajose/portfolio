@@ -351,16 +351,14 @@ footer .text-muted {
    ========================================================= */
 
 .admin-body {
-    display: flex;
-    align-items: center;
-    justify-content: center;
     min-height: 100vh;
-    padding: 2rem 1rem;
+    padding: 3rem 1rem;
 }
 
-.admin-wrapper {
+.admin-wrapper {    
     width: 100%;
     max-width: 24rem;
+    margin: 0 auto;
 }
 
 .admin-wrapper-wide {

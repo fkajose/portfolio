@@ -65,25 +65,16 @@
         <div class="collapse navbar-collapse" id="navbarResponsive">
           <ul class="navbar-nav ms-auto py-4 py-lg-0">
             <li class="nav-item">
-              
-                class="nav-link px-lg-3 py-3 py-lg-4{% if request.endpoint == 'home' %} active{% endif %}"
-                href="{{ url_for('home') }}"
-                >Home</a
-              >
+              <a class="nav-link px-lg-3 py-3 py-lg-4{% if request.endpoint == 'home' %} active{% endif %}" href="{{ url_for('home') }}">Home</a>
             </li>
             <li class="nav-item">
-              
-                class="nav-link px-lg-3 py-3 py-lg-4{% if request.endpoint == 'projects' %} active{% endif %}"
-                href="{{ url_for('projects') }}"
-                >Projects</a
-              >
+              <a class="nav-link px-lg-3 py-3 py-lg-4{% if request.endpoint == 'projects' %} active{% endif %}" href="{{ url_for('projects') }}">Projects</a>
             </li>
             <li class="nav-item">
-              
-                class="nav-link px-lg-3 py-3 py-lg-4{% if request.endpoint == 'about' %} active{% endif %}"
-                href="{{ url_for('about') }}"
-                >About</a
-              >
+              <a class="nav-link px-lg-3 py-3 py-lg-4{% if request.endpoint == 'about' %} active{% endif %}" href="{{ url_for('about') }}">About</a>
+            </li>
+          </ul>
+        </div>
             </li>
           </ul>
         </div>
