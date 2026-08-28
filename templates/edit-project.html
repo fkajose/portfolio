@@ -1,0 +1,453 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta
+      name="viewport"
+      content="width=device-width, initial-scale=1, shrink-to-fit=no"
+    />
+    <meta name="robots" content="noindex, nofollow" />
+    <title>Edit project — Farook Ajose</title>
+    {% block styles %} {{ bootstrap.load_css() }}
+    <link
+      href="https://fonts.googleapis.com/css?family=Space+Grotesk:400,700,400italic,700italic"
+      rel="stylesheet"
+      type="text/css"
+    />
+    <link
+      href="https://fonts.googleapis.com/css?family=Inter:300italic,400italic,600italic,700italic,800italic,400,300,600,700,800"
+      rel="stylesheet"
+      type="text/css"
+    />
+    <link
+      href="https://fonts.googleapis.com/css?family=IBM+Plex+Mono:300italic,400italic,600italic,700italic,800italic,400,300,600,700,800"
+      rel="stylesheet"
+      type="text/css"
+    />
+    <link
+      href="{{ url_for('static', filename='css/styles.css') }}"
+      rel="stylesheet"
+    />
+    {% endblock %}
+  </head>
+  <body class="admin-body">
+    <div class="admin-wrapper admin-wrapper-wide">
+      <div id="checkingSession" class="admin-card text-center">
+        <p class="text-muted small mb-0">Loading project…</p>
+      </div>
+
+      <div id="notFoundPanel" class="admin-card text-center d-none">
+        <p class="text-muted small mb-3">No project found with that slug.</p>
+        <a
+          href="{{ url_for('admin_projects') }}"
+          class="btn btn-sm btn-secondary"
+          >Back to projects</a
+        >
+      </div>
+
+      <div id="editProjectPanel" class="admin-card d-none">
+        <div class="d-flex justify-content-between align-items-center mb-4">
+          <h1 class="admin-title mb-0">Edit project</h1>
+          <div>
+            <a
+              href="{{ url_for('admin_projects') }}"
+              class="btn btn-sm btn-secondary me-2"
+              >Back</a
+            >
+            <button id="logoutButton" class="btn btn-sm btn-secondary">
+              Sign out
+            </button>
+          </div>
+        </div>
+
+        <div id="formError" class="admin-error d-none"></div>
+        <div id="formSuccess" class="admin-success d-none"></div>
+
+        <form id="projectForm">
+          <div class="mb-3">
+            <label class="admin-label" for="title">Title</label>
+            <input
+              type="text"
+              id="title"
+              class="form-control admin-input"
+              required
+            />
+          </div>
+
+          <div class="mb-3">
+            <span class="admin-label d-block"
+              >Slug (fixed — used in the project URL, not editable here)</span
+            >
+            <div id="slugDisplay" class="admin-slug-display"></div>
+          </div>
+
+          <div class="row">
+            <div class="col-md-6 mb-3">
+              <label class="admin-label" for="tag">Category</label>
+              <select id="tag" class="form-select admin-input" required>
+                <option value="ai">AI / NLP</option>
+                <option value="automation">Automation</option>
+                <option value="data">Data analysis</option>
+                <option value="cheme">Chemical eng</option>
+                <option value="webdev">Software / web dev</option>
+              </select>
+            </div>
+            <div class="col-md-6 mb-3">
+              <label class="admin-label" for="date">Date</label>
+              <input
+                type="date"
+                id="date"
+                class="form-control admin-input"
+                required
+              />
+            </div>
+          </div>
+
+          <div class="mb-3">
+            <label class="admin-label" for="summary"
+              >Summary (used on cards + grid)</label
+            >
+            <textarea
+              id="summary"
+              class="form-control admin-input"
+              rows="2"
+              required
+            ></textarea>
+          </div>
+
+          <hr class="admin-divider" />
+          <p class="admin-section-label">Cover image</p>
+
+          <div class="mb-4">
+            <div id="currentCoverWrap" class="admin-image-preview-wrap d-none">
+              <img
+                id="currentCoverImage"
+                class="admin-image-preview"
+                alt="Current cover image"
+              />
+            </div>
+            <label class="admin-label mt-2" for="coverImage">
+              Replace cover image (leave blank to keep the current one)
+            </label>
+            <div class="admin-file-upload">
+              <input
+                type="file"
+                id="coverImage"
+                accept="image/*"
+                class="admin-file-input-hidden"
+              />
+              <label for="coverImage" class="btn btn-secondary btn-sm mb-0"
+                >Choose file</label
+              >
+              <span id="coverImageFileName" class="admin-file-name"
+                >No file chosen</span
+              >
+            </div>
+            <div
+              id="newCoverPreviewWrap"
+              class="admin-image-preview-wrap d-none"
+            >
+              <img
+                id="newCoverPreview"
+                class="admin-image-preview"
+                alt="New cover image preview"
+              />
+            </div>
+          </div>
+
+          <hr class="admin-divider" />
+          <p class="admin-section-label">Detail page sections (optional)</p>
+
+          <div class="mb-3">
+            <label class="admin-label" for="problem">The problem</label>
+            <textarea
+              id="problem"
+              class="form-control admin-input"
+              rows="3"
+            ></textarea>
+          </div>
+
+          <div class="mb-3">
+            <label class="admin-label" for="approach">What I built</label>
+            <textarea
+              id="approach"
+              class="form-control admin-input"
+              rows="3"
+            ></textarea>
+          </div>
+
+          <div class="mb-3">
+            <label class="admin-label" for="result">Result</label>
+            <textarea
+              id="result"
+              class="form-control admin-input"
+              rows="3"
+            ></textarea>
+          </div>
+
+          <hr class="admin-divider" />
+
+          <div class="row">
+            <div class="col-md-6 mb-3">
+              <label class="admin-label" for="impactScore"
+                >Impact score (number, for sorting)</label
+              >
+              <input
+                type="number"
+                id="impactScore"
+                class="form-control admin-input"
+              />
+            </div>
+            <div class="col-md-6 mb-3">
+              <label class="admin-label" for="impactLabel">Impact label</label>
+              <input
+                type="text"
+                id="impactLabel"
+                class="form-control admin-input"
+              />
+            </div>
+          </div>
+
+          <div class="mb-3">
+            <label class="admin-label" for="stack"
+              >Stack (comma-separated)</label
+            >
+            <input type="text" id="stack" class="form-control admin-input" />
+          </div>
+
+          <div class="mb-3">
+            <label class="admin-label" for="link">Repo / demo link</label>
+            <input type="url" id="link" class="form-control admin-input" />
+          </div>
+
+          <div class="form-check mb-4">
+            <input type="checkbox" class="form-check-input" id="featured" />
+            <label class="form-check-label small text-muted" for="featured">
+              Feature on homepage
+            </label>
+          </div>
+
+          <button
+            type="submit"
+            class="btn btn-primary text-uppercase"
+            id="submitButton"
+          >
+            Save changes
+          </button>
+        </form>
+      </div>
+    </div>
+
+    <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+    <script>
+      (function () {
+        const supabaseClient = supabase.createClient(
+          "{{ config.SUPABASE_URL }}",
+          "{{ config.SUPABASE_ANON_KEY }}"
+        );
+
+        const slug = {{ slug | tojson }};
+
+        const checkingSession = document.getElementById("checkingSession");
+        const notFoundPanel = document.getElementById("notFoundPanel");
+        const editProjectPanel = document.getElementById("editProjectPanel");
+        const projectForm = document.getElementById("projectForm");
+        const formError = document.getElementById("formError");
+        const formSuccess = document.getElementById("formSuccess");
+        const submitButton = document.getElementById("submitButton");
+        const logoutButton = document.getElementById("logoutButton");
+        const slugDisplay = document.getElementById("slugDisplay");
+
+        const currentCoverWrap = document.getElementById("currentCoverWrap");
+        const currentCoverImage = document.getElementById("currentCoverImage");
+        const coverImageInput = document.getElementById("coverImage");
+        const coverImageFileName = document.getElementById("coverImageFileName");
+        const newCoverPreviewWrap = document.getElementById("newCoverPreviewWrap");
+        const newCoverPreview = document.getElementById("newCoverPreview");
+
+        let existingCoverImageUrl = null;
+
+        function showError(message) {
+          formSuccess.classList.add("d-none");
+          formError.textContent = message;
+          formError.classList.remove("d-none");
+        }
+
+        function showSuccess(message) {
+          formError.classList.add("d-none");
+          formSuccess.textContent = message;
+          formSuccess.classList.remove("d-none");
+        }
+
+        coverImageInput.addEventListener("change", function () {
+          const file = coverImageInput.files[0];
+          if (!file) {
+            newCoverPreviewWrap.classList.add("d-none");
+            newCoverPreview.src = "";
+            coverImageFileName.textContent = "No file chosen";
+            return;
+          }
+          newCoverPreview.src = URL.createObjectURL(file);
+          newCoverPreviewWrap.classList.remove("d-none");
+          coverImageFileName.textContent = file.name;
+        });
+
+        function populateForm(project) {
+          document.getElementById("title").value = project.title;
+          document.getElementById("tag").value = project.tag;
+          document.getElementById("date").value = project.date;
+          document.getElementById("summary").value = project.summary;
+          document.getElementById("problem").value = project.problem || "";
+          document.getElementById("approach").value = project.approach || "";
+          document.getElementById("result").value = project.result || "";
+          document.getElementById("impactScore").value = project.impact_score ?? "";
+          document.getElementById("impactLabel").value = project.impact_label || "";
+          document.getElementById("stack").value = (project.stack || []).join(", ");
+          document.getElementById("link").value = project.link || "";
+          document.getElementById("featured").checked = !!project.featured;
+          slugDisplay.textContent = project.slug;
+
+          existingCoverImageUrl = project.cover_image_url || null;
+          if (existingCoverImageUrl) {
+            currentCoverImage.src = existingCoverImageUrl;
+            currentCoverWrap.classList.remove("d-none");
+          }
+        }
+
+        async function uploadCoverImage() {
+          const file = coverImageInput.files[0];
+          if (!file) return existingCoverImageUrl;
+
+          const ext = file.name.split(".").pop();
+          const path = `covers/${slug}-${Date.now()}.${ext}`;
+
+          const { error: uploadError } = await supabaseClient.storage
+            .from("project-media")
+            .upload(path, file, { cacheControl: "3600", upsert: false });
+
+          if (uploadError) {
+            throw new Error("Image upload failed: " + uploadError.message);
+          }
+
+          const { data } = supabaseClient.storage.from("project-media").getPublicUrl(path);
+          return data.publicUrl;
+        }
+
+        async function loadProject() {
+          const { data, error } = await supabaseClient
+            .from("projects")
+            .select("*")
+            .eq("slug", slug)
+            .maybeSingle();
+
+          if (error || !data) {
+            checkingSession.classList.add("d-none");
+            notFoundPanel.classList.remove("d-none");
+            return;
+          }
+
+          populateForm(data);
+          checkingSession.classList.add("d-none");
+          editProjectPanel.classList.remove("d-none");
+        }
+
+        projectForm.addEventListener("submit", async function (e) {
+          e.preventDefault();
+          formError.classList.add("d-none");
+          formSuccess.classList.add("d-none");
+
+          const title = document.getElementById("title").value.trim();
+          const tag = document.getElementById("tag").value;
+          const dateValue = document.getElementById("date").value;
+          const summary = document.getElementById("summary").value.trim();
+          const problem = document.getElementById("problem").value.trim();
+          const approach = document.getElementById("approach").value.trim();
+          const result = document.getElementById("result").value.trim();
+          const impactScoreRaw = document.getElementById("impactScore").value;
+          const impactLabel = document.getElementById("impactLabel").value.trim();
+          const stackRaw = document.getElementById("stack").value;
+          const link = document.getElementById("link").value.trim();
+          const featured = document.getElementById("featured").checked;
+
+          const tagLabels = {
+            ai: "AI / NLP",
+            automation: "Automation",
+            data: "Data analysis",
+            cheme: "Chemical eng",
+            webdev: "Software / web dev",
+          };
+
+          if (!title || !tag || !dateValue || !summary) {
+            showError("Fill in title, category, date, and summary.");
+            return;
+          }
+
+          const stack = stackRaw
+            .split(",")
+            .map(function (s) { return s.trim(); })
+            .filter(function (s) { return s.length > 0; });
+
+          submitButton.disabled = true;
+
+          let coverImageUrl;
+          try {
+            submitButton.textContent = coverImageInput.files[0] ? "Uploading image…" : "Saving…";
+            coverImageUrl = await uploadCoverImage();
+          } catch (uploadErr) {
+            submitButton.disabled = false;
+            submitButton.textContent = "Save changes";
+            showError(uploadErr.message);
+            return;
+          }
+
+          const payload = {
+            title: title,
+            tag: tag,
+            tag_label: tagLabels[tag],
+            date: dateValue,
+            summary: summary,
+            problem: problem || null,
+            approach: approach || null,
+            result: result || null,
+            cover_image_url: coverImageUrl,
+            impact_score: impactScoreRaw ? Number(impactScoreRaw) : null,
+            impact_label: impactLabel || null,
+            stack: stack,
+            link: link || null,
+            featured: featured,
+          };
+
+          submitButton.textContent = "Saving…";
+
+          const { error } = await supabaseClient.from("projects").update(payload).eq("slug", slug);
+
+          submitButton.disabled = false;
+          submitButton.textContent = "Save changes";
+
+          if (error) {
+            showError("Couldn't save changes. " + error.message);
+            return;
+          }
+
+          showSuccess("Changes saved.");
+        });
+
+        logoutButton.addEventListener("click", async function () {
+          await supabaseClient.auth.signOut();
+          window.location.href = "{{ url_for('admin_login') }}";
+        });
+
+        async function requireSession() {
+          const { data } = await supabaseClient.auth.getSession();
+          if (!data.session) {
+            window.location.href = "{{ url_for('admin_login') }}";
+            return;
+          }
+          loadProject();
+        }
+
+        requireSession();
+      })();
+    </script>
+  </body>
+</html>

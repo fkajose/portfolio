@@ -73,6 +73,17 @@
             class="text-decoration-none"
           >
             <div class="card h-100 project-card">
+              {% if project.cover_image_url %}
+              <img
+                src="{{ project.cover_image_url }}"
+                alt=""
+                class="project-card-image"
+              />
+              {% else %}
+              <div class="project-card-image project-card-image-empty">
+                <i class="fas fa-image"></i>
+              </div>
+              {% endif %}
               <div class="card-body">
                 <div class="project-tag text-uppercase small mb-2">
                   {{ project.tag_label }}
@@ -81,7 +92,7 @@
                 <p class="card-text small project-summary mb-3">
                   {{ project.summary }}
                 </p>
-                <div class="project-stack small project-summary">
+                <div class="project-stack small text-muted">
                   {{ project.stack | join(' · ') }}
                 </div>
               </div>
@@ -91,7 +102,10 @@
         {% endfor %}
       </div>
 
-      <div id="projectEmptyState" class="text-center project-summary py-5 d-none">
+      <div
+        id="projectEmptyState"
+        class="text-center project-summary py-5 d-none"
+      >
         No projects match this filter yet.
       </div>
     </div>
