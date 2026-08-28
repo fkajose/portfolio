@@ -1,37 +1,33 @@
 /* =========================================================
    Farook Ajose — Portfolio
-   Blueprint instrumentation theme
+   Circuit / HUD instrumentation theme
    ========================================================= */
 
 :root {
-    --color-bg: #14100d;
-    --color-surface: #251e17;
-    --color-surface-raised: #2b231c;
-    --color-border: #3d332a;
-    --color-border-strong: #75604c;
-    --color-teal: #6b8fae;
-    --color-teal-light: #93b3cc;
-    --color-amber: #d97b3f;
-    --color-amber-light: #e89b5c;
-    --color-text: #f6efe6;
-    --color-text-secondary: #c2b3a1;
-    --color-text-muted: #94856f;
+    --color-bg: #05070c;
+    --color-surface: #1a3266;
+    --color-surface-raised: #223d78;
+    --color-border: #4c6192;
+    --color-border-strong: #5f78ab;
+    --color-accent: #5c78ab;
+    --color-accent-light: #93aad4;
+    --color-highlight: #f0a83f;
+    --color-highlight-light: #f5bc66;
+    --color-text: #eef1f7;
+    --color-text-secondary: #9fb0d1;
+    --color-text-muted: #7488ab;
 
     --font-display: "Space Grotesk", sans-serif;
     --font-body: "Inter", sans-serif;
     --font-mono: "IBM Plex Mono", monospace;
 
-    /* Override Bootstrap's own theme variables so any default-styled
-     Bootstrap element — not just our custom classes — inherits
-     correct dark-theme contrast instead of light-theme rgba values
-     that collapse to near-invisible on a dark background. */
     --bs-body-bg: var(--color-bg);
     --bs-body-color: var(--color-text);
     --bs-secondary-color: var(--color-text-muted);
     --bs-tertiary-color: var(--color-text-secondary);
     --bs-border-color: var(--color-border);
-    --bs-link-color: var(--color-teal-light);
-    --bs-link-hover-color: var(--color-amber-light);
+    --bs-link-color: var(--color-accent-light);
+    --bs-link-hover-color: var(--color-text);
 }
 
 /* =========================================================
@@ -67,22 +63,22 @@ p {
 }
 
 a {
-    color: var(--color-teal-light);
+    color: var(--color-accent-light);
     text-decoration: none;
 }
 
 a:hover {
-    color: var(--color-amber-light);
+    color: var(--color-highlight-light);
 }
 
 ::selection {
-    background: var(--color-teal);
+    background: var(--color-accent);
     color: var(--color-bg);
 }
 
 /* =========================================================
-   Buttons — teal for standard actions, amber reserved
-   for the one primary action per page (resume, submit)
+   Buttons — accent blue for standard actions, highlight amber
+   reserved for the one primary action per page (resume, submit)
    ========================================================= */
 
 .btn {
@@ -94,15 +90,15 @@ a:hover {
 }
 
 .btn-primary {
-    background-color: var(--color-amber);
-    border-color: var(--color-amber);
+    background-color: var(--color-highlight);
+    border-color: var(--color-highlight);
     color: var(--color-bg);
 }
 
 .btn-primary:hover,
 .btn-primary:focus {
-    background-color: var(--color-amber-light);
-    border-color: var(--color-amber-light);
+    background-color: var(--color-highlight-light);
+    border-color: var(--color-highlight-light);
     color: var(--color-bg);
 }
 
@@ -115,8 +111,8 @@ a:hover {
 .btn-secondary:hover,
 .btn-secondary:focus {
     background-color: var(--color-surface-raised);
-    border-color: var(--color-teal);
-    color: var(--color-teal-light);
+    border-color: var(--color-accent);
+    color: var(--color-accent-light);
 }
 
 /* =========================================================
@@ -136,7 +132,7 @@ a:hover {
 }
 
 #mainNav .navbar-brand:hover {
-    color: var(--color-teal-light);
+    color: var(--color-accent-light);
 }
 
 #mainNav .nav-link {
@@ -148,11 +144,11 @@ a:hover {
 }
 
 #mainNav .nav-link:hover {
-    color: var(--color-teal-light);
+    color: var(--color-accent-light);
 }
 
 #mainNav .nav-link.active {
-    color: var(--color-amber-light);
+    color: var(--color-highlight-light);
 }
 
 #mainNav .navbar-toggler {
@@ -177,7 +173,7 @@ a:hover {
     content: "";
     position: absolute;
     inset: 0;
-    background-color: rgba(11, 18, 32, 0.82);
+    background-color: color-mix(in srgb, var(--color-bg) 82%, transparent);
 }
 
 .masthead .container {
@@ -195,7 +191,7 @@ a:hover {
     font-size: 0.85rem;
     letter-spacing: 0.03em;
     text-transform: uppercase;
-    color: var(--color-teal-light);
+    color: var(--color-accent-light);
     margin-bottom: 1.25rem;
 }
 
@@ -229,7 +225,7 @@ a:hover {
 }
 
 .project-card:hover {
-    border-color: var(--color-teal);
+    border-color: var(--color-accent);
     transform: translateY(-2px);
 }
 
@@ -241,7 +237,7 @@ a:hover {
 .project-tag {
     font-family: var(--font-mono);
     letter-spacing: 0.04em;
-    color: var(--color-teal-light);
+    color: var(--color-accent-light);
 }
 
 .project-stack {
@@ -269,14 +265,14 @@ a:hover {
 }
 
 .project-chip:hover {
-    border-color: var(--color-teal);
-    color: var(--color-teal-light);
+    border-color: var(--color-accent);
+    color: var(--color-accent-light);
 }
 
 .project-chip.active {
-    background-color: rgba(58, 143, 140, 0.15);
-    border-color: var(--color-teal);
-    color: var(--color-teal-light);
+    background-color: color-mix(in srgb, var(--color-accent) 20%, transparent);
+    border-color: var(--color-accent);
+    color: var(--color-accent-light);
 }
 
 .project-sort {
@@ -307,8 +303,8 @@ a:hover {
 }
 
 .about-link:hover {
-    color: var(--color-teal-light);
-    border-bottom-color: var(--color-teal);
+    color: var(--color-accent-light);
+    border-bottom-color: var(--color-accent);
 }
 
 .about-stat {
@@ -321,7 +317,7 @@ a:hover {
     font-family: var(--font-mono);
     font-size: 1.5rem;
     font-weight: 500;
-    color: var(--color-amber-light);
+    color: var(--color-highlight-light);
 }
 
 .about-stat-label {
@@ -349,7 +345,7 @@ footer .fa-stack .fa-inverse {
 }
 
 footer a:hover .fa-stack .fa-circle {
-    color: var(--color-teal);
+    color: var(--color-accent);
 }
 
 footer a:hover .fa-stack .fa-inverse {
@@ -371,7 +367,7 @@ footer .text-muted {
     padding: 3rem 1rem;
 }
 
-.admin-wrapper {    
+.admin-wrapper {
     width: 100%;
     max-width: 24rem;
     margin: 0 auto;
@@ -422,9 +418,9 @@ footer .text-muted {
 
 .admin-input:focus {
     background-color: var(--color-bg);
-    border-color: var(--color-teal);
+    border-color: var(--color-accent);
     color: var(--color-text);
-    box-shadow: 0 0 0 1px var(--color-teal);
+    box-shadow: 0 0 0 1px var(--color-accent);
 }
 
 .admin-input::placeholder {
@@ -442,9 +438,9 @@ footer .text-muted {
 }
 
 .admin-success {
-    background-color: rgba(58, 143, 140, 0.12);
-    border: 0.5px solid var(--color-teal);
-    color: var(--color-teal-light);
+    background-color: color-mix(in srgb, var(--color-accent) 12%, transparent);
+    border: 0.5px solid var(--color-accent);
+    color: var(--color-accent-light);
     font-size: 0.85rem;
     padding: 0.6rem 0.9rem;
     border-radius: 6px;
@@ -467,7 +463,7 @@ footer .text-muted {
 }
 
 .project-back-link:hover {
-    color: var(--color-teal-light);
+    color: var(--color-accent-light);
 }
 
 .project-stack-list {
@@ -489,7 +485,7 @@ footer .text-muted {
 .project-impact-banner {
     background-color: var(--color-surface);
     border: 0.5px solid var(--color-border);
-    border-left: 2px solid var(--color-amber);
+    border-left: 2px solid var(--color-highlight);
     border-radius: 8px;
     padding: 1rem 1.25rem;
 }
@@ -498,7 +494,7 @@ footer .text-muted {
     font-family: var(--font-mono);
     font-size: 1.1rem;
     font-weight: 500;
-    color: var(--color-amber-light);
+    color: var(--color-highlight-light);
 }
 
 .project-section h2 {
@@ -517,11 +513,11 @@ footer .text-muted {
     font-family: var(--font-mono);
     font-size: 0.8rem;
     letter-spacing: 0.03em;
-    color: var(--color-teal-light);
+    color: var(--color-accent-light);
 }
 
 .project-next-link:hover {
-    color: var(--color-amber-light);
+    color: var(--color-highlight-light);
 }
 
 /* =========================================================
