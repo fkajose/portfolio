@@ -103,6 +103,39 @@
           </div>
 
           <hr class="admin-divider" />
+          <p class="admin-section-label">Cover image</p>
+
+          <div class="mb-4">
+            <label class="admin-label" for="coverImage">
+              Used on Home/Projects cards and the detail page hero
+            </label>
+            <div class="admin-file-upload">
+              <input
+                type="file"
+                id="coverImage"
+                accept="image/*"
+                class="admin-file-input-hidden"
+              />
+              <label for="coverImage" class="btn btn-secondary btn-sm mb-0"
+                >Choose file</label
+              >
+              <span id="coverImageFileName" class="admin-file-name"
+                >No file chosen</span
+              >
+            </div>
+            <div
+              id="coverImagePreviewWrap"
+              class="admin-image-preview-wrap d-none"
+            >
+              <img
+                id="coverImagePreview"
+                class="admin-image-preview"
+                alt="Cover image preview"
+              />
+            </div>
+          </div>
+
+          <hr class="admin-divider" />
           <p class="admin-section-label">Detail page sections (optional)</p>
 
           <div class="mb-3">
@@ -215,6 +248,11 @@
         const formSuccess = document.getElementById("formSuccess");
         const submitButton = document.getElementById("submitButton");
         const logoutButton = document.getElementById("logoutButton");
+        const coverImageInput = document.getElementById("coverImage");
+        const coverImagePreviewWrap = document.getElementById(
+          "coverImagePreviewWrap",
+        );
+        const coverImagePreview = document.getElementById("coverImagePreview");
 
         const tagLabels = {
           ai: "AI / NLP",
@@ -244,6 +282,23 @@
           formSuccess.classList.remove("d-none");
         }
 
+        // Live preview as soon as a file is picked — this is just a local
+        // object URL, no upload happens until the form is submitted.
+        coverImageInput.addEventListener("change", function () {
+          const file = coverImageInput.files[0];
+          const fileNameEl = document.getElementById("coverImageFileName");
+
+          if (!file) {
+            coverImagePreviewWrap.classList.add("d-none");
+            coverImagePreview.src = "";
+            fileNameEl.textContent = "No file chosen";
+            return;
+          }
+          coverImagePreview.src = URL.createObjectURL(file);
+          coverImagePreviewWrap.classList.remove("d-none");
+          fileNameEl.textContent = file.name;
+        });
+
         async function requireSession() {
           const { data } = await supabaseClient.auth.getSession();
           if (!data.session) {
@@ -252,6 +307,30 @@
           }
           checkingSession.classList.add("d-none");
           addProjectPanel.classList.remove("d-none");
+        }
+
+        // Uploads the cover image to the project-media bucket and returns
+        // its public URL, or null if no file was selected.
+        async function uploadCoverImage(slug) {
+          const file = coverImageInput.files[0];
+          if (!file) return null;
+
+          const ext = file.name.split(".").pop();
+          const path = `covers/${slug}-${Date.now()}.${ext}`;
+
+          const { error: uploadError } = await supabaseClient.storage
+            .from("project-media")
+            .upload(path, file, { cacheControl: "3600", upsert: false });
+
+          if (uploadError) {
+            throw new Error("Image upload failed: " + uploadError.message);
+          }
+
+          const { data } = supabaseClient.storage
+            .from("project-media")
+            .getPublicUrl(path);
+
+          return data.publicUrl;
         }
 
         projectForm.addEventListener("submit", async function (e) {
@@ -288,9 +367,26 @@
               return s.length > 0;
             });
 
+          const slug = slugify(title);
+
+          submitButton.disabled = true;
+
+          let coverImageUrl = null;
+          try {
+            if (coverImageInput.files[0]) {
+              submitButton.textContent = "Uploading image…";
+              coverImageUrl = await uploadCoverImage(slug);
+            }
+          } catch (uploadErr) {
+            submitButton.disabled = false;
+            submitButton.textContent = "Add project";
+            showError(uploadErr.message);
+            return;
+          }
+
           const payload = {
             title: title,
-            slug: slugify(title),
+            slug: slug,
             tag: tag,
             tag_label: tagLabels[tag],
             date: dateValue,
@@ -298,6 +394,7 @@
             problem: problem || null,
             approach: approach || null,
             result: result || null,
+            cover_image_url: coverImageUrl,
             impact_score: impactScoreRaw ? Number(impactScoreRaw) : null,
             impact_label: impactLabel || null,
             stack: stack,
@@ -305,7 +402,6 @@
             featured: featured,
           };
 
-          submitButton.disabled = true;
           submitButton.textContent = "Adding…";
 
           const { error } = await supabaseClient
@@ -322,6 +418,8 @@
 
           showSuccess("Project added.");
           projectForm.reset();
+          coverImagePreviewWrap.classList.add("d-none");
+          coverImagePreview.src = "";
         });
 
         logoutButton.addEventListener("click", async function () {
