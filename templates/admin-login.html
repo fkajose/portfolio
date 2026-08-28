@@ -97,7 +97,7 @@
         async function redirectIfSignedIn() {
           const { data } = await supabaseClient.auth.getSession();
           if (data.session) {
-            window.location.href = "{{ url_for('add_project') }}";
+            window.location.href = "{{ url_for('admin_projects') }}";
           }
         }
 
@@ -129,7 +129,7 @@
             return;
           }
 
-          window.location.href = "{{ url_for('add_project') }}";
+          window.location.href = "{{ url_for('admin_projects') }}";
         });
 
         redirectIfSignedIn();

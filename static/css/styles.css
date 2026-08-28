@@ -580,3 +580,85 @@ footer .text-muted {
     object-fit: cover;
     background-color: var(--color-bg);
 }
+
+/* =========================================================
+   Admin — projects list page
+   ========================================================= */
+
+.admin-project-row {
+    display: flex;
+    align-items: center;
+    gap: 1rem;
+    padding: 0.85rem 0;
+    border-bottom: 0.5px solid var(--color-border);
+}
+
+.admin-project-row:last-child {
+    border-bottom: none;
+}
+
+.admin-project-thumb {
+    width: 56px;
+    height: 56px;
+    border-radius: 8px;
+    object-fit: cover;
+    flex-shrink: 0;
+    background-color: var(--color-bg);
+    border: 0.5px solid var(--color-border);
+}
+
+.admin-project-thumb-empty {
+    background-color: var(--color-bg);
+}
+
+.admin-project-info {
+    flex: 1;
+    min-width: 0;
+}
+
+.admin-wrapper-list {
+    max-width: 56rem;
+}
+
+.admin-project-title-row {
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+    min-width: 0;
+}
+
+.admin-project-title {
+    font-size: 0.9rem;
+    color: var(--color-text);
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    min-width: 0;
+}
+
+.admin-project-badge {
+    font-family: var(--font-mono);
+    font-size: 0.62rem;
+    letter-spacing: 0.03em;
+    text-transform: uppercase;
+    color: var(--color-highlight-light);
+    border: 0.5px solid var(--color-highlight);
+    border-radius: 999px;
+    padding: 0.1rem 0.5rem;
+    flex-shrink: 0;
+    white-space: nowrap;
+}
+
+.admin-project-meta {
+    font-family: var(--font-mono);
+    font-size: 0.72rem;
+    color: var(--color-text-muted);
+    margin-top: 0.2rem;
+}
+
+.admin-project-actions {
+    display: flex;
+    gap: 0.5rem;
+    flex-shrink: 0;
+}
+

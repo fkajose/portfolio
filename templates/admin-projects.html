@@ -1,0 +1,194 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta
+      name="viewport"
+      content="width=device-width, initial-scale=1, shrink-to-fit=no"
+    />
+    <meta name="robots" content="noindex, nofollow" />
+    <title>Projects — Admin — Farook Ajose</title>
+    {% block styles %} {{ bootstrap.load_css() }}
+    <link
+      href="https://fonts.googleapis.com/css?family=Space+Grotesk:400,700,400italic,700italic"
+      rel="stylesheet"
+      type="text/css"
+    />
+    <link
+      href="https://fonts.googleapis.com/css?family=Inter:300italic,400italic,600italic,700italic,800italic,400,300,600,700,800"
+      rel="stylesheet"
+      type="text/css"
+    />
+    <link
+      href="https://fonts.googleapis.com/css?family=IBM+Plex+Mono:300italic,400italic,600italic,700italic,800italic,400,300,600,700,800"
+      rel="stylesheet"
+      type="text/css"
+    />
+    <link
+      href="{{ url_for('static', filename='css/styles.css') }}"
+      rel="stylesheet"
+    />
+    {% endblock %}
+  </head>
+  <body class="admin-body">
+    <div class="admin-wrapper admin-wrapper-wide">
+      <div id="checkingSession" class="admin-card text-center">
+        <p class="text-muted small mb-0">Checking session…</p>
+      </div>
+
+      <div id="projectsListPanel" class="admin-card d-none">
+        <div class="d-flex justify-content-between align-items-center mb-4">
+          <h1 class="admin-title mb-0">Projects</h1>
+          <div>
+            <a
+              href="{{ url_for('add_project') }}"
+              class="btn btn-sm btn-primary me-2"
+              >+ Add new</a
+            >
+            <button id="logoutButton" class="btn btn-sm btn-secondary">
+              Sign out
+            </button>
+          </div>
+        </div>
+
+        <div id="listError" class="admin-error d-none"></div>
+
+        <div id="projectsList"></div>
+
+        <div id="emptyState" class="text-center text-muted py-5 d-none">
+          No projects yet.
+          <a href="{{ url_for('add_project') }}" class="about-link"
+            >Add your first one →</a
+          >
+        </div>
+      </div>
+    </div>
+
+    <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+    <script>
+      (function () {
+        const supabaseClient = supabase.createClient(
+          "{{ config.SUPABASE_URL }}",
+          "{{ config.SUPABASE_ANON_KEY }}",
+        );
+
+        const checkingSession = document.getElementById("checkingSession");
+        const projectsListPanel = document.getElementById("projectsListPanel");
+        const projectsList = document.getElementById("projectsList");
+        const emptyState = document.getElementById("emptyState");
+        const listError = document.getElementById("listError");
+        const logoutButton = document.getElementById("logoutButton");
+
+        function showError(message) {
+          listError.textContent = message;
+          listError.classList.remove("d-none");
+        }
+
+        function editUrl(slug) {
+          return "{{ url_for('edit_project', slug='__SLUG__') }}".replace(
+            "__SLUG__",
+            slug,
+          );
+        }
+
+        function renderRow(project) {
+          const row = document.createElement("div");
+          row.className = "admin-project-row";
+          row.dataset.slug = project.slug;
+
+          const thumbHtml = project.cover_image_url
+            ? `<img src="${project.cover_image_url}" alt="" class="admin-project-thumb" />`
+            : `<div class="admin-project-thumb admin-project-thumb-empty"></div>`;
+
+          row.innerHTML = `
+  ${thumbHtml}
+  <div class="admin-project-info">
+    <div class="admin-project-title-row">
+      <span class="admin-project-title" title="${project.title}">${project.title}</span>
+      ${project.featured ? '<span class="admin-project-badge">Featured</span>' : ""}
+    </div>
+    <div class="admin-project-meta">${project.tag_label} · ${project.date}</div>
+  </div>
+  <div class="admin-project-actions">
+    <a href="${editUrl(project.slug)}" class="btn btn-sm btn-secondary">Edit</a>
+    <button class="btn btn-sm btn-secondary admin-delete-btn" data-slug="${project.slug}" data-title="${project.title}">Delete</button>
+  </div>
+`;
+          return row;
+        }
+
+        async function loadProjects() {
+          const { data, error } = await supabaseClient
+            .from("projects")
+            .select("*")
+            .order("date", { ascending: false });
+
+          if (error) {
+            showError("Couldn't load projects. " + error.message);
+            return;
+          }
+
+          projectsList.innerHTML = "";
+
+          if (!data || data.length === 0) {
+            emptyState.classList.remove("d-none");
+            return;
+          }
+
+          emptyState.classList.add("d-none");
+          data.forEach(function (project) {
+            projectsList.appendChild(renderRow(project));
+          });
+        }
+
+        projectsList.addEventListener("click", async function (e) {
+          const btn = e.target.closest(".admin-delete-btn");
+          if (!btn) return;
+
+          const slug = btn.dataset.slug;
+          const title = btn.dataset.title;
+
+          const confirmed = window.confirm(
+            `Delete "${title}"? This can't be undone.`,
+          );
+          if (!confirmed) return;
+
+          btn.disabled = true;
+          btn.textContent = "Deleting…";
+
+          const { error } = await supabaseClient
+            .from("projects")
+            .delete()
+            .eq("slug", slug);
+
+          if (error) {
+            showError("Couldn't delete project. " + error.message);
+            btn.disabled = false;
+            btn.textContent = "Delete";
+            return;
+          }
+
+          loadProjects();
+        });
+
+        async function requireSession() {
+          const { data } = await supabaseClient.auth.getSession();
+          if (!data.session) {
+            window.location.href = "{{ url_for('admin_login') }}";
+            return;
+          }
+          checkingSession.classList.add("d-none");
+          projectsListPanel.classList.remove("d-none");
+          loadProjects();
+        }
+
+        logoutButton.addEventListener("click", async function () {
+          await supabaseClient.auth.signOut();
+          window.location.href = "{{ url_for('admin_login') }}";
+        });
+
+        requireSession();
+      })();
+    </script>
+  </body>
+</html>

@@ -111,6 +111,16 @@ def add_project():
     return render_template("add-project.html")
 
 
+@app.route("/admin/projects")
+def admin_projects():
+    return render_template("admin-projects.html")
+
+
+@app.route("/admin/edit-project/<slug>")
+def edit_project(slug):
+    return render_template("edit-project.html", slug=slug)
+
+
 @app.errorhandler(404)
 def not_found(e):
     return render_template("404.html"), 404
