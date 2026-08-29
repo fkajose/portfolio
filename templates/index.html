@@ -11,14 +11,14 @@
         <div class="site-heading">
           <h1>Farook Ajose</h1>
           <span class="subheading"
-            >chemical engineer building automation and AI systems</span
+            >Engineering, Data & Automating Everything Else</span
           >
         </div>
         <div class="intro">
           <p>
-            First-class graduate of chemical engineering from the University of
-            Lagos with experience using data to influence decisions and support
-            operations.
+            Life is too short to do the same task twice. I combine an engineer's
+            toolkit with data science and automation to eliminate manual
+            bottlenecks and make your difficult decisions easier.
           </p>
         </div>
       </div>
@@ -34,23 +34,34 @@
       <div class="row gx-4 gx-lg-5 mb-4">
         {% for project in featured_projects %}
         <div class="col-md-4 mb-4">
-  <a href="{{ url_for('project_detail', slug=project.slug) }}" class="text-decoration-none">
-    <div class="card h-100 project-card">
-      {% if project.cover_image_url %}
-      <img src="{{ project.cover_image_url }}" alt="" class="project-card-image" />
-      {% else %}
-      <div class="project-card-image project-card-image-empty">
-        <i class="fas fa-image"></i>
-      </div>
-      {% endif %}
-      <div class="card-body">
-        <div class="project-tag text-uppercase small mb-2">{{ project.tag_label }}</div>
-        <h5 class="card-title">{{ project.title }}</h5>
-        <p class="card-text small project-summary">{{ project.summary }}</p>
-      </div>
-    </div>
-  </a>
-</div>
+          <a
+            href="{{ url_for('project_detail', slug=project.slug) }}"
+            class="text-decoration-none"
+          >
+            <div class="card h-100 project-card">
+              {% if project.cover_image_url %}
+              <img
+                src="{{ project.cover_image_url }}"
+                alt=""
+                class="project-card-image"
+              />
+              {% else %}
+              <div class="project-card-image project-card-image-empty">
+                <i class="fas fa-image"></i>
+              </div>
+              {% endif %}
+              <div class="card-body">
+                <div class="project-tag text-uppercase small mb-2">
+                  {{ project.tag_label }}
+                </div>
+                <h5 class="card-title">{{ project.title }}</h5>
+                <p class="card-text small project-summary">
+                  {{ project.summary }}
+                </p>
+              </div>
+            </div>
+          </a>
+        </div>
         {% endfor %}
       </div>
 
